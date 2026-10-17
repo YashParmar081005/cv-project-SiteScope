@@ -1,0 +1,48 @@
+# Construction stages per project type.
+#
+# * `weight` = planned share of total work (a type's weights sum to 1.0). Progress = Σ weight × completion.
+# * `phase`  = the visual construction phase the computer-vision model recognises for that stage:
+#   earthwork → foundation → structure → finishing. When several stages share a phase, the CV estimate of
+#   "how far into the phase" is spread over them in proportion to their weights.
+types:
+  residential_building:
+    stages:
+      - {key: site_preparation, name: Site preparation & excavation, weight: 0.10, phase: earthwork}
+      - {key: foundation, name: Foundation, weight: 0.15, phase: foundation}
+      - {key: structural_frame, name: Structural frame, weight: 0.35, phase: structure}
+      - {key: envelope, name: Walls & envelope, weight: 0.20, phase: finishing}
+      - {key: finishing, name: MEP & finishing, weight: 0.20, phase: finishing}
+  commercial_building:
+    stages:
+      - {key: site_preparation, name: Site preparation & excavation, weight: 0.08, phase: earthwork}
+      - {key: foundation, name: Foundation & basement, weight: 0.17, phase: foundation}
+      - {key: structural_frame, name: Structural frame, weight: 0.35, phase: structure}
+      - {key: envelope, name: Facade & envelope, weight: 0.18, phase: finishing}
+      - {key: finishing, name: MEP & fit-out, weight: 0.22, phase: finishing}
+  bridge:
+    stages:
+      - {key: site_preparation, name: Site preparation, weight: 0.08, phase: earthwork}
+      - {key: foundation, name: Piles & foundations, weight: 0.20, phase: foundation}
+      - {key: substructure, name: Piers & abutments, weight: 0.25, phase: structure}
+      - {key: superstructure, name: Girders & deck, weight: 0.32, phase: structure}
+      - {key: finishing, name: Deck finishing & safety works, weight: 0.15, phase: finishing}
+  road:
+    stages:
+      - {key: earthwork, name: Clearing & earthwork, weight: 0.25, phase: earthwork}
+      - {key: drainage, name: Drainage & culverts, weight: 0.15, phase: foundation}
+      - {key: base_layers, name: Sub-base & base layers, weight: 0.30, phase: foundation}
+      - {key: paving, name: Paving, weight: 0.20, phase: finishing}
+      - {key: finishing, name: Markings & furniture, weight: 0.10, phase: finishing}
+  rail:
+    stages:
+      - {key: site_preparation, name: Site preparation, weight: 0.10, phase: earthwork}
+      - {key: earthwork, name: Earthwork & formation, weight: 0.20, phase: earthwork}
+      - {key: structures, name: Viaducts & structures, weight: 0.35, phase: structure}
+      - {key: track, name: Track laying, weight: 0.20, phase: finishing}
+      - {key: systems, name: Systems & finishing, weight: 0.15, phase: finishing}
+  other:
+    stages:
+      - {key: site_preparation, name: Site preparation, weight: 0.15, phase: earthwork}
+      - {key: foundation, name: Foundation, weight: 0.20, phase: foundation}
+      - {key: structure, name: Main structure, weight: 0.40, phase: structure}
+      - {key: finishing, name: Finishing, weight: 0.25, phase: finishing}

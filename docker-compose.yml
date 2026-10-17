@@ -1,0 +1,36 @@
+# docker compose up --build   →  http://localhost:8000
+# Requires .env (copy .env.example) with JWT_SECRET and ADMIN_PASSWORD set.
+# Uploaded photos and analysis images are stored in ./data (bind-mounted).
+services:
+  mongo:
+    image: mongo:8.0
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # not published: only the app container can reach MongoDB
+
+  app:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      MONGO_URI: mongodb://mongo:27017
+      LOG_JSON: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongo-data:

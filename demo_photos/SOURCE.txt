@@ -1,0 +1,6 @@
+Demo photos for trying the app. They are NOT among the labelled reference photos the computer-vision
+classifier learns from (reference_photos/), so the result you see is a genuine prediction.
+
+Source: held-out test images of the "Construction Site Safety" dataset by Roboflow Universe Projects,
+licensed CC BY 4.0: https://universe.roboflow.com/roboflow-universe-projects/construction-site-safety
+Mirrored on Hugging Face as keremberke/construction-safety-object-detection. File names were changed.

@@ -1,0 +1,14 @@
+{
+  "name": "sitescope-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Plain HTML + CSS + JavaScript frontend (no build step). Node is only used to run tests.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/*.test.mjs\"",
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}

@@ -1,0 +1,17 @@
+# Secrets & local config
+.env
+
+# Environments & caches
+backend/.venv/
+.cache/
+__pycache__/
+*.pyc
+frontend/node_modules/
+frontend/test-results/
+frontend/playwright-report/
+
+# Data: uploads and analysis images, browser-test storage, local MongoDB, logs
+data/storage/
+data/e2e-storage/
+data/mongo/
+data/*.log
