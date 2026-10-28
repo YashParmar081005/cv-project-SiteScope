@@ -36,7 +36,6 @@ img { max-width: 100%; display: block; }
 .topbar .inner { max-width: 1100px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
 .brand { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 700; font-size: 1.1rem; }
 .brand:hover { text-decoration: none; }
-.brand-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--accent); display: grid; place-items: center; }
 .topbar .user { margin-left: auto; color: #d1d5db; font-size: .9rem; }
 .page { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; display: flex; flex-direction: column; gap: 18px; }
 .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
@@ -174,16 +173,27 @@ body { -webkit-font-smoothing: antialiased; }
 h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: -.022em; }
 h2 { font-size: 1.12rem; font-weight: 700; letter-spacing: -.01em; }
 
-/* floating rounded bar, matching the landing page */
-.topbar { position: sticky; top: 0; z-index: 40; background: var(--bg); padding: 12px 20px 0; }
+/* floating glass bar: light instead of a black band, and transparent around the pill so the
+   page scrolls behind it and the blur has something to frost. */
+.topbar { position: sticky; top: 0; z-index: 40; background: transparent; color: var(--ink); padding: 12px 20px 0; }
 .topbar .inner {
-  max-width: 1100px; margin: 0 auto; padding: 9px 10px 9px 18px; gap: 12px;
-  background: var(--dark); border-radius: 999px; border: 1px solid rgba(255, 255, 255, .08);
-  box-shadow: 0 6px 22px rgba(17, 24, 39, .16);
+  max-width: 1100px; margin: 0 auto; padding: 9px 10px 9px 16px; gap: 12px;
+  background: rgba(255, 255, 255, .8);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, .9);
+  box-shadow: 0 6px 26px rgba(17, 24, 39, .09), inset 0 1px 0 rgba(255, 255, 255, .95);
 }
-.topbar .user { margin-left: auto; }
-.topbar .btn.small { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .18); color: #f3f4f6; }
-.topbar .btn.small:hover { background: rgba(255, 255, 255, .16); }
+.topbar .brand { color: var(--ink); }
+.topbar .user { margin-left: auto; color: var(--muted); font-weight: 500; }
+.topbar .btn.small { background: rgba(255, 255, 255, .6); border-color: rgba(17, 24, 39, .12); color: var(--ink); }
+.topbar .btn.small:hover { background: rgba(255, 255, 255, .95); border-color: rgba(17, 24, 39, .2); }
+
+/* no backdrop-filter support: fall back to a solid pill rather than unreadable transparency */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .topbar .inner { background: var(--surface); border-color: var(--line); }
+  .topbar .btn.small { background: var(--surface); }
+}
 
 .btn { transition: background .15s, border-color .15s, color .15s, transform .12s, box-shadow .15s; }
 .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: var(--shadow); }
