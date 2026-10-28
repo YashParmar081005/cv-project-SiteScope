@@ -57,11 +57,31 @@ code { font-family: var(--font-mono); font-size: .85em; background: #f3f4f6; pad
   position: relative;
   max-width: var(--wrap); margin: 0 auto; padding: 9px 10px 9px 18px;
   display: flex; align-items: center; gap: 18px;
-  background: rgba(23, 31, 46, .72); backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, .13); border-radius: 999px;
+  background: rgba(17, 24, 39, .42);
+  -webkit-backdrop-filter: blur(22px) saturate(185%);
+  backdrop-filter: blur(22px) saturate(185%);
+  border: 1px solid rgba(255, 255, 255, .19); border-radius: 999px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .17);
   transition: background .25s, border-color .25s, box-shadow .25s;
 }
-.nav.scrolled .nav-inner { background: rgba(14, 20, 32, .93); border-color: rgba(255, 255, 255, .09); box-shadow: 0 10px 34px rgba(0, 0, 0, .3); }
+/* Below the hero the page turns pale, so the bar inverts to light glass with dark text
+   instead of going opaque. It stays glass the whole way down. */
+.nav.scrolled .nav-inner {
+  background: rgba(255, 255, 255, .62);
+  border-color: rgba(255, 255, 255, .9);
+  box-shadow: 0 10px 30px rgba(17, 24, 39, .13), inset 0 1px 0 rgba(255, 255, 255, .95);
+}
+.nav.scrolled .logo { color: var(--ink); }
+.nav.scrolled .nav-toggle { border-color: rgba(17, 24, 39, .22); }
+.nav.scrolled .nav-toggle span { background: var(--ink); }
+@media (min-width: 921px) {
+  .nav.scrolled .nav-links > a:not(.btn) { color: #4a5568; }
+  .nav.scrolled .nav-links > a:not(.btn):hover { color: var(--ink); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav-inner { background: rgba(14, 20, 32, .94); }
+  .nav.scrolled .nav-inner { background: #fff; }
+}
 .logo { display: flex; align-items: center; gap: 10px; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; letter-spacing: -.01em; }
 .logo:hover { text-decoration: none; }
 .nav-links { margin-left: auto; display: flex; align-items: center; gap: 26px; }
@@ -90,15 +110,40 @@ code { font-family: var(--font-mono); font-size: .85em; background: #f3f4f6; pad
 }
 
 /* ── hero ────────────────────────────────────────────────── */
-/* a real site photo, kept visible: one soft radial scrim darkest behind the centred text,
-   which is where the white type needs its contrast, and much lighter at the edges. */
+/* The hero cycles through the four construction phases the app recognises, each slide slowly
+   zooming (Ken Burns) and cross-fading into the next. The scrim is a separate layer so the
+   photos can move underneath it without the text contrast changing. */
 .hero {
-  background:
-    radial-gradient(1240px 720px at 50% 46%, rgba(9, 14, 24, .91), rgba(9, 14, 24, .68) 50%, rgba(9, 14, 24, .54) 100%),
-    radial-gradient(820px 380px at 10% 0%, rgba(217, 119, 6, .18), transparent 62%),
-    url("../img/hero.jpg") center / cover no-repeat;
-  color: #fff; padding: 168px 0 118px; text-align: center;
+  position: relative; isolation: isolate; color: #fff; text-align: center; overflow: hidden;
+  min-height: 100vh;
+  min-height: 100svh;              /* svh so mobile browser chrome does not cause a scroll */
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 150px 0 112px;
 }
+.hero-bg { position: absolute; inset: 0; z-index: -2; background: #0b1120; }
+.hero-slide {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity 1.6s ease-in-out;
+}
+.hero-slide.is-on { opacity: 1; animation: kenburns 11s ease-out both; }
+@keyframes kenburns { from { transform: scale(1.001); } to { transform: scale(1.11); } }
+.hero-scrim {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(1240px 720px at 50% 46%, rgba(9, 14, 24, .88), rgba(9, 14, 24, .64) 50%, rgba(9, 14, 24, .5) 100%),
+    radial-gradient(820px 380px at 10% 0%, rgba(217, 119, 6, .2), transparent 62%);
+}
+/* the phase of the photo showing right now: a glass pill in the corner */
+.hero-tag {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: 26px; z-index: 1;
+  display: inline-flex; align-items: center; gap: 9px; padding: 7px 16px; border-radius: 999px;
+  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .04em; color: #e8edf5;
+  background: rgba(255, 255, 255, .12);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, .22);
+}
+.hero-dot { width: 7px; height: 7px; border-radius: 50%; background: #fbbf24; flex: none; }
 .hero-text { max-width: 880px; margin: 0 auto; }
 .hero .cta-row { justify-content: center; }
 .eyebrow { margin-bottom: 20px; }
@@ -114,10 +159,9 @@ code { font-family: var(--font-mono); font-size: .85em; background: #f3f4f6; pad
 .cta-center { justify-content: center; }
 .note { margin-top: 22px; font-size: .88rem; color: #b6c0cf; }
 
-}
 
 @media (max-width: 920px) {
-  .hero { padding: 132px 0 76px; }
+  .hero { padding: 104px 0 54px; }
 }
 
 /* ── bands ───────────────────────────────────────────────── */
@@ -280,3 +324,53 @@ code { font-family: var(--font-mono); font-size: .85em; background: #f3f4f6; pad
   font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
 .tlr-bad { color: #FCA5A5; }
 @media (max-width: 760px) { .tl-result { grid-template-columns: repeat(2, 1fr); } }
+
+/* ═════════ glassmorphism, site-wide ═════════
+   Frosted panels only read as glass if something sits behind them, so the page gets a fixed
+   wash of soft colour and every surface becomes translucent over it. Each glass rule carries a
+   solid fallback further down for browsers without backdrop-filter. */
+body {
+  background-color: #eef1f6;
+  background-image:
+    radial-gradient(640px 460px at 10% 14%, rgba(217, 119, 6, .16), transparent 64%),
+    radial-gradient(720px 500px at 92% 30%, rgba(124, 58, 237, .14), transparent 64%),
+    radial-gradient(600px 460px at 28% 72%, rgba(14, 165, 233, .13), transparent 64%),
+    radial-gradient(620px 440px at 82% 92%, rgba(16, 185, 129, .11), transparent 64%);
+  background-attachment: fixed;
+}
+
+/* the section bands stop being solid slabs and just tint the wash */
+.band { background: transparent; }
+.band-alt { background: rgba(255, 255, 255, .34); border-top: 1px solid rgba(255, 255, 255, .6); border-bottom: 1px solid rgba(255, 255, 255, .6); }
+
+/* every light surface on the page */
+.step, .mcard, .pipe-stage, .phase, .tl-item, .acard, .honest {
+  background: rgba(255, 255, 255, .55);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, .7);
+  box-shadow: 0 8px 28px rgba(17, 24, 39, .08), inset 0 1px 0 rgba(255, 255, 255, .85);
+}
+.honest { border-left: 4px solid var(--accent); }
+.step:hover, .mcard:hover, .phase:hover, .pipe-stage:hover {
+  background: rgba(255, 255, 255, .72);
+  box-shadow: 0 16px 38px rgba(17, 24, 39, .13), inset 0 1px 0 rgba(255, 255, 255, .95);
+}
+.pipe-icon, .pipe-out { background: rgba(255, 255, 255, .5); border-color: rgba(255, 255, 255, .8); }
+.mfoot, .honest-eg { border-top-color: rgba(17, 24, 39, .1); }
+
+/* the two dark panels become dark glass rather than flat blocks */
+.pipe-end, .tl-result {
+  background: rgba(17, 24, 39, .8);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, .13);
+  box-shadow: 0 12px 34px rgba(17, 24, 39, .22), inset 0 1px 0 rgba(255, 255, 255, .12);
+}
+.final { background: linear-gradient(165deg, rgba(14, 20, 32, .95), rgba(24, 33, 50, .94)); }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .step, .mcard, .pipe-stage, .phase, .tl-item, .acard, .honest { background: #fff; border-color: var(--line); }
+  .pipe-end, .tl-result { background: var(--dark); }
+  .hero-tag { background: rgba(17, 24, 39, .8); }
+}

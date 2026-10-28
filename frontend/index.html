@@ -34,6 +34,14 @@
 
   <!-- ─────────── hero ─────────── -->
   <section class="hero">
+    <div class="hero-bg" id="hero-bg" aria-hidden="true">
+      <img class="hero-slide is-on" src="img/hero-1.jpg" alt="" data-phase="Earthwork">
+      <img class="hero-slide" src="img/hero-2.jpg" alt="" loading="lazy" data-phase="Foundation">
+      <img class="hero-slide" src="img/hero-3.jpg" alt="" loading="lazy" data-phase="Structure">
+      <img class="hero-slide" src="img/hero-4.jpg" alt="" loading="lazy" data-phase="Finishing">
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <p class="hero-tag" aria-live="off"><span class="hero-dot"></span><span id="hero-phase">Earthwork</span></p>
     <div class="wrap">
       <div class="hero-text">
         <p class="eyebrow"><span class="status" id="status"><span class="status-dot"></span><span id="status-text">Checking server…</span></span></p>
@@ -160,8 +168,10 @@
           <figcaption><b>Finishing</b><span>Smooth surfaces, rectangles everywhere, a repeating window pattern</span></figcaption>
         </figure>
       </div>
-      <p class="credit">Photos: Construction Site Safety dataset, Roboflow Universe (CC BY 4.0); the facade photo
-        above and the background photo at the top of this page by Fons Heijnsbroek, Wikimedia Commons (CC0).</p>
+      <p class="credit">Photos in this row: Construction Site Safety dataset, Roboflow Universe (CC BY 4.0);
+        facade photo by Fons Heijnsbroek (CC0). The four rotating photos at the top of this page are from
+        Wikimedia Commons: Ingolfson (public domain), Fons Heijnsbroek (CC0, two photos) and Phillip Pessar
+        (CC BY 2.0).</p>
     </div>
   </section>
 
