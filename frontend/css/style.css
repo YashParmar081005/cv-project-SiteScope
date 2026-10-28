@@ -1,6 +1,8 @@
 /* SiteScope — plain CSS, no build step. Colours are variables so the theme lives in one place. */
 :root {
-  --font: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-display: "Space Grotesk", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "Cascadia Code", Consolas, monospace;
   --ink: #1f2937;
   --muted: #6b7280;
   --line: #e5e7eb;
@@ -150,3 +152,86 @@ table.kv td:first-child { color: var(--muted); width: 38%; }
 .explain-step table { margin-top: 6px; }
 table.kv.path td:first-child { width: 26%; color: var(--ink); font-weight: 600; }
 table.kv.path td:nth-child(2) { font-family: "Cascadia Code", Consolas, monospace; font-size: .74rem; color: var(--muted); }
+
+/* photo analysis: plain-language summary, shown before the algorithm detail */
+.plain-top { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 14px; }
+.plain-num { font-size: 1.9rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+.plain-num.left { color: var(--muted); }
+.plain-bar { height: 14px; }
+.plain-stages { list-style: none; margin: 18px 0 0; padding: 0; }
+.plain-stages li { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: .92rem; }
+.plain-stages li:last-child { border-bottom: 0; }
+.plain-stages .mark { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: .72rem; font-weight: 700; }
+.plain-stages .mark.done { background: #ecfdf5; color: #047857; }
+.plain-stages .mark.now { background: var(--accent); color: #fff; }
+.plain-stages .mark.todo { background: #f3f4f6; color: var(--muted); }
+.plain-stages .share { color: var(--muted); font-size: .8rem; }
+.plain-stages .what { margin-left: auto; color: var(--muted); font-size: .85rem; text-align: right; }
+details.pipeline > summary { margin: 0; font-size: 1rem; }
+
+/* ───────── UI polish: buttons, cards, inputs, topbar ───────── */
+body { -webkit-font-smoothing: antialiased; }
+h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: -.022em; }
+h2 { font-size: 1.12rem; font-weight: 700; letter-spacing: -.01em; }
+
+/* floating rounded bar, matching the landing page */
+.topbar { position: sticky; top: 0; z-index: 40; background: var(--bg); padding: 12px 20px 0; }
+.topbar .inner {
+  max-width: 1100px; margin: 0 auto; padding: 9px 10px 9px 18px; gap: 12px;
+  background: var(--dark); border-radius: 999px; border: 1px solid rgba(255, 255, 255, .08);
+  box-shadow: 0 6px 22px rgba(17, 24, 39, .16);
+}
+.topbar .user { margin-left: auto; }
+.topbar .btn.small { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .18); color: #f3f4f6; }
+.topbar .btn.small:hover { background: rgba(255, 255, 255, .16); }
+
+.btn { transition: background .15s, border-color .15s, color .15s, transform .12s, box-shadow .15s; }
+.btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
+.btn:disabled { transform: none; }
+.btn.danger:hover { background: #fef2f2; border-color: #fecaca; }
+
+.card { transition: box-shadow .18s, border-color .18s; }
+.bar span { background: linear-gradient(90deg, var(--accent), #f59e0b); transition: width .4s cubic-bezier(.2, .7, .3, 1); }
+
+input, select, textarea { transition: border-color .15s, box-shadow .15s; }
+.dropzone { transition: border-color .15s, background .15s; }
+.dropzone:hover { border-color: var(--accent); background: #fffdf7; }
+
+/* project card + its delete button */
+.project-card-wrap { position: relative; display: flex; min-width: 0; }
+.project-card-wrap > .project-card { flex: 1; }
+.pc-title { padding-right: 36px; }
+.card-del {
+  position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; padding: 0;
+  display: grid; place-items: center; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--muted); cursor: pointer; opacity: .5;
+  transition: opacity .15s, background .15s, border-color .15s, color .15s;
+}
+.project-card-wrap:hover .card-del, .card-del:focus-visible { opacity: 1; }
+.card-del:hover { background: #fef2f2; border-color: #fecaca; color: var(--danger); }
+.card-del:disabled { opacity: .35; cursor: not-allowed; }
+
+/* collapsed pipeline */
+details.pipeline > summary {
+  display: flex; align-items: center; gap: 8px; padding: 11px 14px; border-radius: 9px;
+  background: var(--bg); border: 1px solid var(--line); font-weight: 600; list-style: none;
+  transition: background .15s, border-color .15s;
+}
+details.pipeline > summary::-webkit-details-marker { display: none; }
+details.pipeline > summary::before { content: "▸"; color: var(--accent); font-size: .9rem; transition: transform .18s; }
+details.pipeline[open] > summary::before { transform: rotate(90deg); }
+details.pipeline > summary:hover { background: var(--accent-soft); border-color: #fcd34d; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+/* ───────── typography: Space Grotesk for display, IBM Plex Mono for data ───────── */
+h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -.015em; }
+.brand, .big, .plain-num { font-family: var(--font-display); }
+.big, .plain-num, .facts dd, table.kv td:nth-child(2) { font-variant-numeric: tabular-nums; }
+.algo code, table.kv.path td:nth-child(2), .kv-grid h4, .badge { font-family: var(--font-mono); }
+.kv-grid h4 { letter-spacing: .06em; font-weight: 500; }
+.badge { font-weight: 500; letter-spacing: -.01em; }
+.chart .tick { font-family: var(--font-mono); font-size: 10.5px; }

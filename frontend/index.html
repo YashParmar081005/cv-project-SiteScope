@@ -3,14 +3,389 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SiteScope — Construction Completion Estimator</title>
-  <meta name="description" content="Estimate when a construction project will finish from dated site photos">
+  <title>SiteScope — Know when your construction project will finish</title>
+  <meta name="description" content="Upload dated site photos. Classical computer vision measures each one and turns them into a progress curve and a completion date, with every step shown.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23d97706'/%3E%3Cpath d='M7 23h18M10 23V13l6-4 6 4v10' stroke='white' stroke-width='2.4' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
-  <div id="app"><div class="center"><div class="spinner"></div></div></div>
-  <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script type="module" src="js/app.js"></script>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#top">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"><path d="M3 21h18M6 21V10l6-5 6 5v11"/></svg>
+      </span>
+      SiteScope
+    </a>
+
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav-links" id="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#measures">What it measures</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#example">Example</a>
+      <a href="#accuracy">Accuracy</a>
+      <a class="btn btn-primary" href="app.html#/">Open the app</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ─────────── hero ─────────── -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
+        <p class="eyebrow"><span class="status" id="status"><span class="status-dot"></span><span id="status-text">Checking server…</span></span></p>
+        <h1>Know when your site will <em>actually</em> be finished.</h1>
+        <p class="lead">
+          Upload dated photos of a construction site. SiteScope measures each photo with classical computer
+          vision, works out which stage the build has reached, and turns that into a progress curve and a
+          completion date — showing every number it used.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary btn-lg" href="app.html#/">Open the app</a>
+          <a class="btn btn-ghost btn-lg" href="#how">See how it works</a>
+        </div>
+        <p class="note">No neural network. No black box. Every answer can be traced back to a named algorithm.</p>
+      </div>
+
+      <div class="hero-card reveal">
+        <div class="hc-head">
+          <span class="chip chip-cv">Computer vision</span>
+          <span class="chip chip-ok">medium confidence</span>
+        </div>
+        <p class="hc-label">Estimated completion</p>
+        <p class="hc-big">29 Jul 2027</p>
+        <div class="hc-badges">
+          <span class="chip chip-bad">90 days late</span>
+          <span class="chip chip-soft">range 28 May – 29 Jul</span>
+        </div>
+        <div class="hc-bar"><span style="width:47.8%"></span></div>
+        <p class="hc-sub"><b>47.8%</b> of the work is done · <b>52.2%</b> still left</p>
+        <dl class="hc-facts">
+          <dt>Working speed</dt><dd>83% of planned (SPI 0.833)</dd>
+          <dt>Work left</dt><dd>≈ 9.3 months</dd>
+          <dt>Based on</dt><dd>6 confirmed photos</dd>
+        </dl>
+        <p class="hc-foot">Real output from the six demo photos in <code>demo/</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── how it works ─────────── -->
+  <section class="band" id="how">
+    <div class="wrap">
+      <p class="kicker">How it works</p>
+      <h2 class="h2">Four steps, photo to finish date</h2>
+      <p class="sub">Each step hands a simple, readable result to the next one.</p>
+
+      <ol class="steps">
+        <li class="step reveal">
+          <span class="step-n">1</span>
+          <h3>Measure the photo</h3>
+          <p>Sky is removed, then 18 OpenCV steps measure colour, edges, straight lines, rectangles, corners,
+            texture and repeating patterns — ending in <b>15 numbers</b> that describe the site.</p>
+        </li>
+        <li class="step reveal">
+          <span class="step-n">2</span>
+          <h3>Find the phase</h3>
+          <p>Those 15 numbers are compared with 144 labelled reference photos. The <b>5 most similar</b> ones vote
+            on the phase: earthwork, foundation, structure or finishing.</p>
+        </li>
+        <li class="step reveal">
+          <span class="step-n">3</span>
+          <h3>You confirm it</h3>
+          <p>The phase is a <b>suggestion, never a fact</b>. You accept it or change the stage and the percentage.
+            Only confirmed photos count towards progress — and the model learns from them.</p>
+        </li>
+        <li class="step reveal">
+          <span class="step-n">4</span>
+          <h3>Get the date</h3>
+          <p>Stage weights turn confirmations into a percentage. Then <b>Earned Schedule</b> and a <b>velocity
+            trend</b> extrapolate a finish date, a range and a confidence level.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ─────────── what it measures ─────────── -->
+  <section class="band band-alt" id="measures">
+    <div class="wrap">
+      <p class="kicker">What it measures</p>
+      <h2 class="h2">The parameters behind every estimate</h2>
+      <p class="sub">An empty plot and a finished facade differ in measurable ways. These are the ones SiteScope uses.</p>
+
+      <div class="mgrid">
+        <article class="mcard reveal">
+          <h3><span class="sw sw-colour"></span>Colour — what the site is made of</h3>
+          <ul>
+            <li><b>Brown</b> → soil, mud, digging</li>
+            <li><b>Grey</b> → concrete, gravel, plaster</li>
+            <li><b>Green</b> → untouched vegetation</li>
+            <li><b>Very dark</b> → steel, rebar, shadow</li>
+            <li><b>Yellow</b> → machinery on site</li>
+          </ul>
+          <p class="mfoot">HSV thresholds + morphological opening</p>
+        </article>
+
+        <article class="mcard reveal">
+          <h3><span class="sw sw-lines"></span>Lines — how much structure stands</h3>
+          <ul>
+            <li><b>Vertical lines</b> → columns, walls, scaffolding</li>
+            <li><b>Horizontal lines</b> → slabs, floors, beams</li>
+            <li><b>Edge density</b> → how much detail exists</li>
+            <li><b>Orthogonality</b> → man-made (0°/90°) vs natural</li>
+          </ul>
+          <p class="mfoot">Canny + Hough transform + Sobel gradients</p>
+        </article>
+
+        <article class="mcard reveal">
+          <h3><span class="sw sw-shape"></span>Shapes — built elements</h3>
+          <ul>
+            <li><b>Rectangles</b> → windows, panels, formwork</li>
+            <li><b>Corners</b> → joints where beams meet</li>
+            <li><b>Contours</b> → closed outlines of objects</li>
+          </ul>
+          <p class="mfoot">findContours + approxPolyDP + Harris / Shi-Tomasi</p>
+        </article>
+
+        <article class="mcard reveal">
+          <h3><span class="sw sw-tex"></span>Texture — rough or finished</h3>
+          <ul>
+            <li><b>High entropy</b> → loose soil, rubble, rebar</li>
+            <li><b>Low entropy</b> → smooth plaster and concrete</li>
+            <li><b>Axis energy</b> → repeating floors and windows</li>
+          </ul>
+          <p class="mfoot">Local Binary Patterns + Fourier transform</p>
+        </article>
+      </div>
+
+      <h3 class="mini-h">The four phases it tells apart</h3>
+      <div class="phases">
+        <figure class="phase reveal">
+          <img src="img/phase-earthwork.jpg" alt="An excavator digging an open earth site" loading="lazy" width="560" height="420">
+          <figcaption><b>Earthwork</b><span>86% brown soil, almost no straight lines, rough texture</span></figcaption>
+        </figure>
+        <figure class="phase reveal">
+          <img src="img/phase-foundation.jpg" alt="Piling rigs and formwork at foundation level" loading="lazy" width="560" height="420">
+          <figcaption><b>Foundation</b><span>Soil plus grey concrete, long horizontal lines appear</span></figcaption>
+        </figure>
+        <figure class="phase reveal">
+          <img src="img/phase-structure.jpg" alt="Exposed reinforcement bars of a concrete frame" loading="lazy" width="560" height="420">
+          <figcaption><b>Structure</b><span>Dark steel and rebar, many corners, sky visible through the frame</span></figcaption>
+        </figure>
+        <figure class="phase reveal">
+          <img src="img/phase-finishing.jpg" alt="A glass and steel facade under construction" loading="lazy" width="560" height="420">
+          <figcaption><b>Finishing</b><span>Smooth surfaces, rectangles everywhere, a repeating window pattern</span></figcaption>
+        </figure>
+      </div>
+      <p class="credit">Photos: Construction Site Safety dataset, Roboflow Universe (CC BY 4.0); facade photo by
+        Fons Heijnsbroek, Wikimedia Commons (CC0).</p>
+    </div>
+  </section>
+
+  <!-- ─────────── the pipeline, visually ─────────── -->
+  <section class="band" id="pipeline">
+    <div class="wrap">
+      <p class="kicker">The pipeline</p>
+      <h2 class="h2">From one photo to a finish date</h2>
+      <p class="sub">Every photo takes the same five-stage path, and each stage hands a readable result to the next.
+        Nothing is hidden — the app shows the numbers at every stage.</p>
+
+      <div class="pipe reveal">
+        <article class="pipe-stage">
+          <span class="pipe-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/>
+            </svg>
+          </span>
+          <h3>Site photo</h3>
+          <p>One dated photo from any camera or phone.</p>
+          <span class="pipe-out">JPEG + date</span>
+        </article>
+
+        <span class="pipe-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+
+        <article class="pipe-stage">
+          <span class="pipe-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/>
+            </svg>
+          </span>
+          <h3>Measure</h3>
+          <p>Sky removed, then 18 OpenCV steps read colour, edges, lines, shapes and texture.</p>
+          <span class="pipe-out">15 numbers</span>
+        </article>
+
+        <span class="pipe-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+
+        <article class="pipe-stage">
+          <span class="pipe-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="7" cy="8" r="2.2"/><circle cx="17" cy="7" r="2.2"/><circle cx="12" cy="15.5" r="2.2"/><path d="M9.1 9.4 10.9 13.6M14.9 8.6 13.1 13.6"/>
+            </svg>
+          </span>
+          <h3>Match</h3>
+          <p>Compared with 144 labelled reference photos; the 5 nearest ones vote on the phase.</p>
+          <span class="pipe-out">phase + position</span>
+        </article>
+
+        <span class="pipe-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+
+        <article class="pipe-stage pipe-you">
+          <span class="pipe-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 6 9 17l-5-5"/>
+            </svg>
+          </span>
+          <h3>You confirm</h3>
+          <p>You accept the suggested stage or correct it. Only confirmed photos move the number.</p>
+          <span class="pipe-out">% complete</span>
+        </article>
+
+        <span class="pipe-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+
+        <article class="pipe-stage pipe-end">
+          <span class="pipe-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>
+            </svg>
+          </span>
+          <h3>Forecast</h3>
+          <p>Earned Schedule and a velocity trend extrapolate the remaining work.</p>
+          <span class="pipe-out">date + range</span>
+        </article>
+      </div>
+
+      <p class="pipe-note">Each box is a real stage in the code: <code>pipeline.py</code> → <code>model.py</code> →
+        <code>stages.py</code> → <code>progress.py</code> → <code>prediction.py</code>.</p>
+    </div>
+  </section>
+
+  <!-- ─────────── worked example ─────────── -->
+  <section class="band band-alt" id="example">
+    <div class="wrap">
+      <p class="kicker">A worked example</p>
+      <h2 class="h2">One site, six photos, eight months</h2>
+      <p class="sub">These are the six demo photos that ship with the project. Each one was measured, given a
+        stage, confirmed, and folded into the progress figure underneath it.</p>
+
+      <div class="tl reveal">
+        <figure class="tl-item">
+          <img src="img/t1.jpg" alt="Site clearing" loading="lazy" width="420" height="315">
+          <figcaption><span class="tl-date">16 Feb 2026</span><span class="tl-stage">Site preparation 60%</span>
+            <span class="tl-pct">6.0%</span></figcaption>
+        </figure>
+        <figure class="tl-item">
+          <img src="img/t2.jpg" alt="Excavation underway" loading="lazy" width="420" height="315">
+          <figcaption><span class="tl-date">6 Apr 2026</span><span class="tl-stage">Site preparation 100%</span>
+            <span class="tl-pct">10.0%</span></figcaption>
+        </figure>
+        <figure class="tl-item">
+          <img src="img/t3.jpg" alt="Foundation digging" loading="lazy" width="420" height="315">
+          <figcaption><span class="tl-date">25 May 2026</span><span class="tl-stage">Foundation 50%</span>
+            <span class="tl-pct">17.5%</span></figcaption>
+        </figure>
+        <figure class="tl-item">
+          <img src="img/t4.jpg" alt="Foundation piling" loading="lazy" width="420" height="315">
+          <figcaption><span class="tl-date">13 Jul 2026</span><span class="tl-stage">Foundation 100%</span>
+            <span class="tl-pct">25.0%</span></figcaption>
+        </figure>
+        <figure class="tl-item">
+          <img src="img/t5.jpg" alt="Reinforcement bars in place" loading="lazy" width="420" height="315">
+          <figcaption><span class="tl-date">7 Sep 2026</span><span class="tl-stage">Structural frame 40%</span>
+            <span class="tl-pct">39.0%</span></figcaption>
+        </figure>
+        <figure class="tl-item">
+          <img src="img/t6.jpg" alt="Formwork on the structural frame" loading="lazy" width="420" height="315">
+          <figcaption><span class="tl-date">19 Oct 2026</span><span class="tl-stage">Structural frame 65%</span>
+            <span class="tl-pct">47.8%</span></figcaption>
+        </figure>
+      </div>
+
+      <div class="tl-result reveal">
+        <div><p class="tlr-label">Progress now</p><p class="tlr-value">47.8%</p></div>
+        <div><p class="tlr-label">Estimated completion</p><p class="tlr-value">29 Jul 2027</p></div>
+        <div><p class="tlr-label">Against the plan</p><p class="tlr-value tlr-bad">90 days late</p></div>
+        <div><p class="tlr-label">Confidence</p><p class="tlr-value">medium</p></div>
+      </div>
+      <p class="credit">On photo 6 the classifier guessed <b>Finishing</b> — formwork has the straight lines and
+        rectangles of a facade. It was corrected to Structural frame 65%, which is exactly what the confirm step
+        is for.</p>
+    </div>
+  </section>
+
+  <!-- ─────────── accuracy ─────────── -->
+  <section class="band" id="accuracy">
+    <div class="wrap">
+      <p class="kicker">Accuracy, stated honestly</p>
+      <h2 class="h2">What it gets right — and what it doesn’t</h2>
+      <p class="sub">Measured by leave-one-out cross-validation on all 144 reference photos.</p>
+
+      <div class="agrid">
+        <div class="acard reveal"><p class="anum">59.0%</p><p class="acap">exact phase correct</p><p class="anote">chance level is 25%</p></div>
+        <div class="acard reveal"><p class="anum">91.7%</p><p class="acap">within one phase</p><p class="anote">rarely badly wrong</p></div>
+        <div class="acard reveal"><p class="anum">medium</p><p class="acap">highest confidence allowed</p><p class="anote">never says “high”</p></div>
+      </div>
+
+      <div class="honest reveal">
+        <h3>Why the app always asks you to confirm</h3>
+        <p>
+          At 59% exact accuracy the classifier is useful but not trustworthy on its own, so it never writes a
+          percentage by itself. It proposes a stage; you confirm or correct it; only then does the number move.
+          A photo of a less-advanced corner of the site can never pull the progress back down, and when the
+          estimate rests on thin data the app says so instead of guessing.
+        </p>
+        <p class="honest-eg">
+          <b>A real failure case:</b> a grey asphalt road reads as “concrete”, which the model associates with the
+          structure phase — so road photos get misread. The demo folder includes these on purpose.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── final cta ─────────── -->
+  <section class="final">
+    <div class="wrap final-in reveal">
+      <h2>Try it with the demo photos</h2>
+      <p>Six dated photos of one site are in <code>demo/01_same_site_timeline/</code>. Upload them in order and
+        watch the progress climb from 6% to 47.8% and the finish date settle.</p>
+      <div class="cta-row cta-center">
+        <a class="btn btn-primary btn-lg" href="app.html#/">Open the app</a>
+        <a class="btn btn-ghost btn-lg" href="app.html#/new">Create a project</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>SiteScope — construction completion estimator</span>
+    <span class="foot-links">
+      <a href="app.html#/">App</a>
+      <a href="/docs">API docs</a>
+      <a href="/api/health">Health</a>
+    </span>
+  </div>
+</footer>
+
+<a class="to-top" id="to-top" href="#top" aria-label="Back to top">↑</a>
+
+<script type="module" src="js/landing.js"></script>
 </body>
 </html>

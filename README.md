@@ -19,7 +19,7 @@ script. [BUILD_LOG.md](BUILD_LOG.md) records what was built, every decision, and
 | Computer vision | OpenCV 5 (headless), NumPy, SciPy: 18-step pipeline + k-NN phase classifier + ORB/RANSAC change detection |
 | Backend | FastAPI, Pydantic v2, PyMongo, JWT session cookie, ReportLab (PDF) |
 | Database | MongoDB (metadata and results only; images are stored as files) |
-| Frontend | Plain HTML + CSS + JavaScript modules, no build step, served by FastAPI |
+| Frontend | Plain HTML + CSS + JavaScript modules, no build step, served by FastAPI. Landing page at `/`, app at `/app.html`. Self-hosted fonts (Space Grotesk, IBM Plex Sans/Mono) so nothing is fetched from a CDN |
 | Tests | pytest (unit + API), `node --test` (form validation), Playwright (browser end-to-end) |
 | Deployment | Docker, Docker Compose |
 
@@ -42,8 +42,15 @@ cd backend
 .venv\Scripts\python -m uvicorn app.main:app --port 8000
 ```
 
-Open <http://localhost:8000>, create an account (or sign in with `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env`;
-the admin sees every project), then **+ Add project → Add a site photo**. Demo photos are in
+Open <http://localhost:8000>. That is the **landing page** (`frontend/index.html`); the app itself is at
+**`/app.html`**, reachable from every *Open the app* button. Create an account there (or sign in with
+`ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env`; the admin sees every project), then
+**+ Add project → Add a site photo**.
+
+**Giving a demo or a presentation?** [`demo/README.md`](demo/README.md) is a ready-made script: six dated
+photos of one site in [`demo/01_same_site_timeline/`](demo/01_same_site_timeline/) with the exact values to
+enter and the exact result they produce (47.8 % done, finish 29 Jul 2027, 90 days late), plus five more photos
+in [`demo/02_other_examples/`](demo/02_other_examples/) that show where the method fails. The raw pool is in
 [`demo_photos/`](demo_photos/).
 
 Linux/macOS: use `backend/.venv/bin/python` and `cp` instead of `copy`.
@@ -154,4 +161,6 @@ The browser test starts its own server on port 8001 with a separate database (`s
 * Reference photos: Wikimedia Commons contributors, licences per file in `reference_photos/sources.csv`
   (CC0, public domain, CC BY 2.0–4.0, CC BY-SA 2.0–4.0; share-alike photos remain under their licence).
 * Demo photos: *Construction Site Safety*, Roboflow Universe Projects, **CC BY 4.0** (see `demo_photos/SOURCE.txt`).
+* Landing-page photos in `frontend/img/` are web-sized copies of the above, credited on the page itself.
+* Fonts in `frontend/fonts/`: Space Grotesk and IBM Plex Sans/Mono, both **SIL Open Font License 1.1**.
 * OpenCV (Apache 2.0), NumPy/SciPy (BSD), FastAPI (MIT), ReportLab (BSD).

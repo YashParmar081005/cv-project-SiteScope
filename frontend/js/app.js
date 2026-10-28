@@ -23,6 +23,7 @@ const topbar = () => html`
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M6 21V10l6-5 6 5v11"/></svg>
     </span>SiteScope</a>
     <span class="user">${state.user.name}</span>
+    <a class="btn small" href="index.html">Home</a>
     <button type="button" class="btn small" id="logout">Sign out</button>
   </div></header>
   <main class="page" id="page"></main>`;
