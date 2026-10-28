@@ -61,7 +61,33 @@ function initReveal() {
   items.forEach((el) => io.observe(el));
 }
 
-/* ── 4. sticky-nav shadow and back-to-top button ────────────────────────── */
+/* ── 4. hero slideshow ───────────────────────────────────────────────────
+   Cycles the four construction phases the app recognises. Each slide cross-fades
+   and slowly zooms; the caption names the phase on screen. With reduced motion the
+   first photo simply stays put. */
+function initHero() {
+  const slides = $$(".hero-slide");
+  const label = $("#hero-phase");
+  if (slides.length < 2) return;
+  if (reduced) {
+    if (label) label.textContent = slides[0].dataset.phase || "";
+    return;
+  }
+  let i = 0;
+  setInterval(() => {
+    const next = (i + 1) % slides.length;
+    slides[i].classList.remove("is-on");
+    slides[next].classList.add("is-on");
+    // restart the zoom so every slide pans from the beginning
+    slides[next].style.animation = "none";
+    void slides[next].offsetWidth;
+    slides[next].style.animation = "";
+    if (label) label.textContent = slides[next].dataset.phase || "";
+    i = next;
+  }, 6000);
+}
+
+/* ── 5. sticky-nav shadow and back-to-top button ────────────────────────── */
 function initScrollChrome() {
   const nav = $("#nav");
   const top = $("#to-top");
@@ -83,4 +109,5 @@ function initScrollChrome() {
 checkHealth();
 initMenu();
 initReveal();
+initHero();
 initScrollChrome();

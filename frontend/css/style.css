@@ -245,3 +245,38 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -.015em; }
 .kv-grid h4 { letter-spacing: .06em; font-weight: 500; }
 .badge { font-weight: 500; letter-spacing: -.01em; }
 .chart .tick { font-family: var(--font-mono); font-size: 10.5px; }
+
+/* ═════════ glassmorphism, matching the landing page ═════════
+   A fixed wash of soft colour behind the page gives the frosted panels something to blur. */
+body {
+  background-color: #eef1f6;
+  background-image:
+    radial-gradient(640px 460px at 8% 12%, rgba(217, 119, 6, .15), transparent 64%),
+    radial-gradient(700px 500px at 94% 28%, rgba(124, 58, 237, .13), transparent 64%),
+    radial-gradient(600px 460px at 30% 80%, rgba(14, 165, 233, .12), transparent 64%);
+  background-attachment: fixed;
+}
+.card, .dropzone {
+  background: rgba(255, 255, 255, .58);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, .72);
+  box-shadow: 0 8px 28px rgba(17, 24, 39, .08), inset 0 1px 0 rgba(255, 255, 255, .85);
+}
+.dropzone { border: 2px dashed rgba(17, 24, 39, .18); }
+.dropzone:hover, .dropzone.over { background: rgba(255, 255, 255, .78); border-color: var(--accent); }
+.project-card:hover { background: rgba(255, 255, 255, .76); box-shadow: 0 16px 38px rgba(17, 24, 39, .13); }
+.step { background: rgba(255, 255, 255, .42); border-color: rgba(255, 255, 255, .6); }
+.btn { background: rgba(255, 255, 255, .62); border-color: rgba(17, 24, 39, .12); }
+.btn:hover:not(:disabled) { background: rgba(255, 255, 255, .92); }
+.btn.primary, .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+.btn.primary:hover { background: var(--accent-dark); }
+.card-del { background: rgba(255, 255, 255, .62); border-color: rgba(17, 24, 39, .12); }
+input, select, textarea { background: rgba(255, 255, 255, .72); border-color: rgba(17, 24, 39, .14); }
+details.pipeline > summary { background: rgba(255, 255, 255, .45); border-color: rgba(255, 255, 255, .7); }
+.bar, .plain-bar { background: rgba(17, 24, 39, .09); }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .card, .dropzone, .btn, input, select, textarea { background: var(--surface); }
+  .card, .dropzone { border-color: var(--line); }
+}
