@@ -8,9 +8,7 @@ export async function render(el, { state }) {
     setHTML(el, html`
       <div class="center">
         <form class="card login" id="auth-form" novalidate style="display:flex;flex-direction:column;gap:14px">
-          <div class="brand"><span class="brand-mark">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M6 21V10l6-5 6 5v11"/></svg>
-          </span>SiteScope</div>
+          <div class="brand">SiteScope</div>
           <p class="muted" style="text-align:center">Estimate when a construction project will finish — from site photos.</p>
           <h2>${mode === "login" ? "Sign in" : "Create account"}</h2>
           <div id="form-error"></div>
