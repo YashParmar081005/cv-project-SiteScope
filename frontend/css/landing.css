@@ -90,16 +90,17 @@ code { font-family: var(--font-mono); font-size: .85em; background: #f3f4f6; pad
 }
 
 /* ── hero ────────────────────────────────────────────────── */
-/* a real site photo under the gradients: dark enough that the text keeps 4.5:1 contrast */
+/* a real site photo, kept visible: one soft radial scrim darkest behind the centred text,
+   which is where the white type needs its contrast, and much lighter at the edges. */
 .hero {
   background:
-    radial-gradient(900px 420px at 18% -10%, rgba(217, 119, 6, .30), transparent 62%),
-    radial-gradient(700px 400px at 92% 8%, rgba(124, 58, 237, .20), transparent 60%),
-    linear-gradient(170deg, rgba(14, 20, 32, .93) 0%, rgba(20, 27, 41, .96) 100%),
+    radial-gradient(1240px 720px at 50% 46%, rgba(9, 14, 24, .91), rgba(9, 14, 24, .68) 50%, rgba(9, 14, 24, .54) 100%),
+    radial-gradient(820px 380px at 10% 0%, rgba(217, 119, 6, .18), transparent 62%),
     url("../img/hero.jpg") center / cover no-repeat;
-  color: #fff; padding: 152px 0 96px;
+  color: #fff; padding: 168px 0 118px; text-align: center;
 }
-.hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; gap: 56px; align-items: center; }
+.hero-text { max-width: 880px; margin: 0 auto; }
+.hero .cta-row { justify-content: center; }
 .eyebrow { margin-bottom: 20px; }
 .status { display: inline-flex; align-items: center; gap: 9px; padding: 6px 14px; border-radius: 999px;
   background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16); font-size: .82rem; color: #e5e7eb; font-weight: 600; }
@@ -108,37 +109,15 @@ code { font-family: var(--font-mono); font-size: .85em; background: #f3f4f6; pad
 .status.down .status-dot { background: #f87171; box-shadow: 0 0 0 4px rgba(248, 113, 113, .18); }
 .hero h1 { font-size: clamp(2.2rem, 4.7vw, 3.4rem); line-height: 1.07; letter-spacing: -.028em; font-weight: 800; }
 .hero h1 em { font-style: normal; color: #fbbf24; }
-.lead { margin-top: 20px; font-size: 1.1rem; line-height: 1.65; color: #c7cedb; max-width: 56ch; }
+.lead { margin: 22px auto 0; font-size: 1.1rem; line-height: 1.65; color: #d7dee8; max-width: 58ch; }
 .cta-row { margin-top: 30px; display: flex; gap: 13px; flex-wrap: wrap; }
 .cta-center { justify-content: center; }
-.note { margin-top: 20px; font-size: .88rem; color: #94a3b8; }
+.note { margin-top: 22px; font-size: .88rem; color: #b6c0cf; }
 
-/* hero visual: a real site photo with the one number that matters frosted over it */
-.shot { margin: 0; position: relative; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); }
-.shot img { width: 100%; height: 100%; max-height: 460px; object-fit: cover; display: block; }
-.shot figcaption {
-  position: absolute; left: 18px; right: 18px; bottom: 18px;
-  display: flex; flex-direction: column; gap: 11px; padding: 20px 22px; border-radius: 15px;
-  background: rgba(255, 255, 255, .82);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  backdrop-filter: blur(18px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, .9); color: var(--ink);
-}
-.shot-top, .shot-bot { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.shot-pct { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; letter-spacing: -.03em;
-  line-height: 1; font-variant-numeric: tabular-nums; }
-.shot-cap { font-size: .88rem; color: var(--muted); }
-.shot-date { font-family: var(--font-display); font-size: 1.22rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-.shot-bar { display: block; height: 9px; background: rgba(17, 24, 39, .1); border-radius: 99px; overflow: hidden; }
-.shot-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), #f59e0b);
-  border-radius: 99px; transform-origin: left; animation: grow 1.1s cubic-bezier(.2, .7, .3, 1) both; }
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .shot figcaption { background: #fff; }
 }
 
 @media (max-width: 920px) {
-  .hero { padding: 124px 0 64px; }
-  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero { padding: 132px 0 76px; }
 }
 
 /* ── bands ───────────────────────────────────────────────── */
@@ -266,7 +245,7 @@ code { font-family: var(--font-mono); font-size: .85em; background: #f3f4f6; pad
 .kicker, .status, .pipe-out, .mfoot { font-family: var(--font-mono); }
 .kicker { letter-spacing: .08em; font-weight: 500; }
 .status { font-weight: 500; letter-spacing: -.01em; }
-.anum, .shot-pct, .shot-date { font-variant-numeric: tabular-nums; }
+.anum { font-variant-numeric: tabular-nums; }
 .btn { font-family: var(--font); }
 
 /* ── real photos: phase examples and the worked timeline ── */
