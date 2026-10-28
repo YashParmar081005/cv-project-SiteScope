@@ -13,8 +13,8 @@ test("add a project, add photos, see the computer-vision analysis, get the estim
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
 
-  // 1. sign-up (unauthenticated visitors land on the sign-in page)
-  await page.goto("/");
+  // 1. sign-up (unauthenticated visitors land on the sign-in page; "/" is the landing page, the app is /app.html)
+  await page.goto("/app.html");
   await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
   await page.getByRole("link", { name: "Create one" }).click();
   await page.getByLabel("Name").fill("E2E Student");
@@ -43,6 +43,12 @@ test("add a project, add photos, see the computer-vision analysis, get the estim
   await expect(page.getByRole("heading", { name: "Photo analysis · 10 Jun 2025" })).toBeVisible({ timeout: 60_000 });
   await expect(page.locator("#result")).toContainText("Computer vision suggests");
   await expect(page.locator("#stage")).toHaveValue("site_preparation");
+  // the plain-language answer comes before any algorithm detail, which stays collapsed until asked for
+  await expect(page.getByRole("heading", { name: "In simple words" })).toBeVisible();
+  await expect(page.locator(".plain-stages li").first()).toContainText("Site preparation");
+  await expect(page.locator(".steps")).toBeHidden();
+  await page.locator("details.pipeline > summary").click();
+  await expect(page.locator(".steps")).toBeVisible();
   await expect(page.locator(".step")).toHaveCount(19);
   await expect(page.locator(".step").filter({ hasText: "Canny edge detector" })).toContainText("cv2.Canny");
   await expect(page.getByRole("heading", { name: "How we got the answer" })).toBeVisible();
@@ -60,7 +66,9 @@ test("add a project, add photos, see the computer-vision analysis, get the estim
   await page.locator('input[type="file"]').setInputFiles(photo("building_6_structure-formwork.jpg"));
   await page.getByLabel("Date the photo was taken").fill("2026-03-20");
   await page.getByRole("button", { name: "Analyse photo" }).click();
-  await expect(page.locator(".step")).toHaveCount(20, { timeout: 60_000 });
+  await expect(page.getByRole("heading", { name: "In simple words" })).toBeVisible({ timeout: 60_000 });
+  await page.locator("details.pipeline > summary").click();
+  await expect(page.locator(".step")).toHaveCount(20);
   await expect(page.locator(".step").last()).toContainText("Change since the previous photo");
   await page.locator("#stage").selectOption("structural_frame");
   await page.getByLabel("Not sure how much of this stage is done").uncheck();

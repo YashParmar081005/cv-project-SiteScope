@@ -20,6 +20,7 @@ export async function render(el, { state }) {
           <button class="btn primary" type="submit">${mode === "login" ? "Sign in" : "Create account"}</button>
           <p class="muted small" style="text-align:center">${mode === "login" ? "No account?" : "Already registered?"}
             <a href="#" id="switch">${mode === "login" ? "Create one" : "Sign in"}</a></p>
+          <p class="muted small" style="text-align:center"><a href="index.html">← Back to the home page</a></p>
         </form>
       </div>`);
     $("#switch", el).addEventListener("click", (e) => { e.preventDefault(); mode = mode === "login" ? "register" : "login"; draw(); });

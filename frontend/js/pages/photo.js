@@ -40,12 +40,15 @@ export async function render(el, ctx) {
       </section>
       <section class="card" id="result"></section>
     </div>
+    ${simpleSummary(o, used)}
     ${a ? html`
     <section class="card">
-      <h2>Computer-vision pipeline: the ${a.steps.length} steps this photo passed through</h2>
-      <p class="muted small" style="margin:-6px 0 14px">Classical computer vision only (OpenCV + NumPy), no neural network.
-        Each step shows the algorithm, why it is used, its parameters, what it measured and its output image.</p>
-      <div class="steps">${a.steps.map(stepCard)}</div>
+      <details class="pipeline">
+        <summary>Show how the computer looked at this photo (${a.steps.length} steps)</summary>
+        <p class="muted small" style="margin:10px 0 14px">Classical computer vision only (OpenCV + NumPy), no neural network.
+          Each step shows the algorithm, why it is used, its parameters, what it measured and its output image.</p>
+        <div class="steps">${a.steps.map(stepCard)}</div>
+      </details>
     </section>` : ""}
     ${o.explanation.length ? html`
     <section class="card">
@@ -72,6 +75,50 @@ function stepCard(s) {
       ${Object.keys(s.metrics || {}).length ? html`<div><h4>Measured</h4><table class="kv">${kv(s.metrics)}</table></div>` : ""}
     </div>
   </article>`;
+}
+
+// Plain-language answer before any algorithm detail: how much is built, how much is left, what is going on now.
+function simpleSummary(o, used) {
+  const r = o.result;
+  if (!r || !used) {
+    return html`<section class="card">
+      <h2>In simple words</h2>
+      <p class="muted">Choose the construction stage in the box above. This will then show how much of the project
+        is done, how much is left and when it should finish.</p>
+    </section>`;
+  }
+  const done = Math.round(r.progress * 100);
+  const fc = r.forecast;
+  const left = fc && fc.remaining_days !== null && fc.remaining_days !== undefined ? duration(fc.remaining_days) : null;
+  const finish = fc && (fc.status === "estimated" || fc.status === "completed") ? fmtDate(fc.estimated_completion_date) : null;
+  const idx = used.stage_index;
+  const stagePct = used.stage_progress;
+
+  return html`<section class="card">
+    <h2>In simple words</h2>
+    <p class="muted small" style="margin:-6px 0 16px">${used.source === "confirmed"
+      ? "Based on the stage you confirmed for this photo."
+      : "Based on the stage the computer vision suggests. Confirm it above to save it."}</p>
+    <div class="plain-top">
+      <div><div class="plain-num">${done}%</div><div class="small muted">of the work is done</div></div>
+      <div><div class="plain-num left">${100 - done}%</div><div class="small muted">is still left</div></div>
+      ${left ? html`<div><div class="plain-num">${left}</div><div class="small muted">of work still to go</div></div>` : ""}
+      ${finish ? html`<div><div class="plain-num">${finish}</div><div class="small muted">expected finish</div></div>` : ""}
+    </div>
+    <div class="bar plain-bar"><span style="width:${done}%"></span></div>
+    <ul class="plain-stages">
+      ${o.project.milestones.map((m, i) => html`<li>
+        <span class="mark ${i < idx ? "done" : i === idx ? "now" : "todo"}">${i < idx ? "✓" : i === idx ? "•" : ""}</span>
+        <b>${m.name}</b>
+        <span class="share">${Math.round(m.weight * 100)}% of the job</span>
+        <span class="what">${i < idx ? "Finished"
+          : i === idx ? (stagePct === null || stagePct === undefined ? "Going on now" : `Going on now · ${stagePct}% of this part done`)
+          : "Not started"}</span>
+      </li>`)}
+    </ul>
+    <p class="small muted" style="margin-top:12px">Every part is a different share of the whole job, so finishing a
+      big part moves the number more than finishing a small one. ${left ? `At the speed seen so far, the rest takes about ${left}.` : ""}</p>
+  </section>`;
 }
 
 function estimateBlock(fc, progress, label) {

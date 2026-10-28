@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import logging
+import mimetypes
 import time
 import uuid
 from contextlib import asynccontextmanager
@@ -20,6 +21,10 @@ from .core.logging import configure_logging, request_id_var
 from .routers import auth, files, health, insights, observations, projects, reports
 
 log = logging.getLogger("app")
+
+# Windows has no registry entry for these, so StaticFiles would serve them as octet-stream.
+mimetypes.add_type("font/woff2", ".woff2")
+mimetypes.add_type("text/javascript", ".js")
 
 # Scripts only from this origin; images from this origin (plus inline SVG/data icons).
 CSP = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; "
